@@ -14,7 +14,7 @@ RUN apt-get update && \
 USER airflow
 
 # Use the Airflow user to install Python packages
-RUN pip install --no-cache-dir pydantic apache-airflow-providers-amazon apache-airflow-providers-snowflake PyPDF2 pandas boto3 
+RUN pip install --no-cache-dir pydantic apache-airflow-providers-amazon apache-airflow-providers-snowflake PyPDF2 pandas boto3 python-dotenv
 
 
 # Continue with any other setup you may need
