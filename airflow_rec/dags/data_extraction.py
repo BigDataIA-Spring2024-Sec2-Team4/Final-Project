@@ -11,6 +11,7 @@ import boto3
 import sys
 import os
 from src.trailer_extract import process_csv
+from src.data_cleaning import clean
 
 
 api_key = os.getenv("TMDB_API_KEY")
@@ -24,6 +25,9 @@ default_args = {
 
 def extract_trailer_task():
     process_csv('/opt/airflow/src/dataset.csv','/opt/airflow/src/final_dataset.csv')
+
+def data_preprocessing_task():
+    clean('/opt/airflow/src/final_dataset.csv','/opt/airflow/src/final_movies.csv','/opt/airflow/src/final_tvshows.csv')
 
 
 with DAG(
@@ -39,6 +43,14 @@ with DAG(
         task_id='extract_data_task',
         python_callable=extract_trailer_task,
     )
+
+    clean_data_task= PythonOperator(
+        task_id='clean_data_task',
+        python_callable=data_preprocessing_task,
+    )
     
 
+
+    
+    extract_data_task >> clean_data_task
 
