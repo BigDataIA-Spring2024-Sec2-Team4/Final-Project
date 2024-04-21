@@ -12,6 +12,7 @@ import sys
 import os
 from src.trailer_extract import process_csv
 from src.data_cleaning import clean
+from src.snowflake_upload import sf_upload
 
 
 api_key = os.getenv("TMDB_API_KEY")
@@ -28,6 +29,9 @@ def extract_trailer_task():
 
 def data_preprocessing_task():
     clean('/opt/airflow/src/final_dataset.csv','/opt/airflow/src/final_movies.csv','/opt/airflow/src/final_tvshows.csv')
+
+def upload_to_snowflake_task():
+    sf_upload('/opt/airflow/src/final_movies.csv','/opt/airflow/src/final_tvshows.csv')
 
 
 with DAG(
@@ -48,9 +52,13 @@ with DAG(
         task_id='clean_data_task',
         python_callable=data_preprocessing_task,
     )
+
+    upload_snowflake_task= PythonOperator(
+        task_id='upload_to_snowflake_task',
+        python_callable=upload_to_snowflake_task,
+    )
     
 
-
     
-    extract_data_task >> clean_data_task
+    extract_data_task >> clean_data_task >> upload_snowflake_task
 
