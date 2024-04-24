@@ -13,6 +13,73 @@ import os
 
 float_init()
 
+# Define your User model
+Base = declarative_base()
+class User(Base):
+    __tablename__ = 'users'
+    username = Column(String, primary_key=True)
+    password = Column(String)
+
+# Database connection
+DATABASE_URL = "postgresql://airflow:airflow@postgres/airflow"
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+# Initialize password context
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+# Initialize session state for loggedIn and userCreated flags
+if 'loggedIn' not in st.session_state:
+    st.session_state['loggedIn'] = False
+if 'showCreateUser' not in st.session_state:
+    st.session_state['showCreateUser'] = False
+
+headerSection = st.container()
+userSection = st.container()
+
+def verify_user(username, entered_password):
+    with SessionLocal() as session:
+        user = session.query(User).filter(User.username == username).first()
+        if user and pwd_context.verify(entered_password, user.password):
+            return True
+        else:
+            return False
+
+def LoggedIn_Clicked(username, password):
+    if verify_user(username, password):
+        st.session_state['loggedIn'] = True
+    else:
+        st.error("Invalid username or password")
+
+def LoggedOut_Clicked():
+    st.session_state['loggedIn'] = False
+
+def show_login_page():
+    st.subheader("Login")
+    username = st.text_input("Username", key="login_username", placeholder="Enter your username")
+    password = st.text_input("Password", key="login_password", placeholder="Enter your password", type="password")
+    st.button("Login", on_click=LoggedIn_Clicked, args=(username, password))
+    if st.button("Create New Account"):
+        st.session_state['showCreateUser'] = True
+        st.experimental_rerun()
+
+def show_create_user_page():
+    st.subheader("Create User")
+    with st.form(key='create_user_form'):
+        username = st.text_input("Username", key="create_username", placeholder="Enter your username")
+        password = st.text_input("Password", key="create_password", placeholder="Enter your password", type="password")
+        submit_button = st.form_submit_button("Create User")
+        if submit_button:
+            hashed_password = pwd_context.hash(password)
+            user_details = {"username": username, "password": hashed_password}
+            result = create_user(user_details, engine)
+            if result['status_code'] == 201:
+                st.success("User created successfully. Please login.")
+                st.session_state['showCreateUser'] = False
+                st.session_state['userCreated'] = True
+                st.experimental_rerun()
+            else:
+                st.error(f"Failed to create user: {result['description']}")
 
 def clear_input():
     """ Clear the input field by resetting the session state variable. """
@@ -23,6 +90,7 @@ def clear_input_name():
     st.session_state.movie_name = ''    
 # Create empty space on the left to push buttons to the right
 def show_main_page():
+    st.button("Logout", on_click=LoggedOut_Clicked)
     st.title('Binge Watch!')
     with st.popover("Pick a Type!"):
         content_type = st.radio("", ["movie", "tv_show"], index=0, on_change=clear_input)
@@ -197,98 +265,46 @@ def show_search_page():
 def page_three():
     st.write("Welcome to Page Three!")
 
-pages = {
-    "Main Page": show_main_page,
-    "Search Page": show_search_page,
-    "History Page": page_three
-}
-
-st.sidebar.title("Navigation")
-page = st.sidebar.radio("",list(pages.keys()))
-
-# Display the selected page with the content in the function
-pages[page]()
-
-# Define your User model
-Base = declarative_base()
-class User(Base):
-    __tablename__ = 'users'
-    username = Column(String, primary_key=True)
-    password = Column(String)
-
-# Database connection
-DATABASE_URL = "postgresql://airflow:airflow@postgres/airflow"
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# Initialize password context
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-# Initialize session state for loggedIn and userCreated flags
-if 'loggedIn' not in st.session_state:
-    st.session_state['loggedIn'] = False
-if 'userCreated' not in st.session_state:
-    st.session_state['userCreated'] = False
-
-headerSection = st.container()
-userSection = st.container()
-
-def verify_user(username, entered_password):
-    with SessionLocal() as session:
-        user = session.query(User).filter(User.username == username).first()
-        if user and pwd_context.verify(entered_password, user.password):
-            return True
+def main():
+    if not st.session_state['loggedIn']:
+        if st.session_state['showCreateUser']:
+            show_create_user_page()
         else:
-            return False
-
-def LoggedIn_Clicked(username, password):
-    if verify_user(username, password):
-        st.session_state['loggedIn'] = True
-        st.session_state['userCreated'] = False  # Reset userCreated flag if it was set
+            show_login_page()
     else:
-        st.session_state['loggedIn'] = False
-        st.error("Invalid username or password")
+        pages = {
+            "Main Page": show_main_page,
+            "Search Page": show_search_page,
+            "History Page": page_three
+            # Add more pages as needed
+        }
+        st.sidebar.title("Navigation")
+        page = st.sidebar.radio("", list(pages.keys()))
+        pages[page]()  # Display the selected page function
 
-def LoggedOut_Clicked():
-    st.session_state['loggedIn'] = False
-
-def show_login_page():
-    with userSection:
-        st.subheader("Login")
-        username = st.text_input("Username", key="login_username", placeholder="Enter your username")
-        password = st.text_input("Password", key="login_password", placeholder="Enter your password", type="password")
-        st.button("Login", on_click=LoggedIn_Clicked, args=(username, password))
-
-def show_create_user_page():
-    with userSection:
-        st.subheader("Create User")
-        # Create a form using the 'with' syntax
-        with st.form(key='create_user_form'):
-            username = st.text_input("Username", key="create_username", placeholder="Enter your username")
-            password = st.text_input("Password", key="create_password", placeholder="Enter your password", type="password")
-            # Place the submit button inside the form
-            submit_button = st.form_submit_button("Create User")
-
-            if submit_button:
-                hashed_password = pwd_context.hash(password)
-                user_details = {"username": username, "password": hashed_password}
-                result = create_user(user_details, engine)
-                if result['status_code'] == 201:
-                    st.success("User created successfully. Please login.")
-                    st.session_state['userCreated'] = True
-                else:
-                    st.error(f"Failed to create user: {result['description']}")
-
-with headerSection:
-    st.title("User Management")
-    #show_main_page()
+# Call main function to start the app
+main()
 
 
-# Display the appropriate UI elements based on the application state
-if not st.session_state['loggedIn']:
-    if not st.session_state['userCreated']:
-        show_create_user_page()
-        show_login_page()
-else:
-    # If logged in, show logout option or other content
-    st.button("Logout", on_click=LoggedOut_Clicked)
+# pages = {
+#     "Main Page": show_main_page,
+#     "Search Page": show_search_page,
+#     "History Page": page_three
+# }
+
+# st.sidebar.title("Navigation")
+# page = st.sidebar.radio("",list(pages.keys()))
+
+# # Display the selected page with the content in the function
+# pages[page]()
+
+
+
+# # Display the appropriate UI elements based on the application state
+# if not st.session_state['loggedIn']:
+#     if st.session_state['showCreateUser']:
+#         show_create_user_page()
+#     else:
+#         show_login_page()
+# else:
+#     show_main_page()
