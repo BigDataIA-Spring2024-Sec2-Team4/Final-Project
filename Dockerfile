@@ -14,8 +14,14 @@ RUN apt-get update && \
 USER airflow
 
 # Use the Airflow user to install Python packages
-RUN pip install --no-cache-dir pydantic apache-airflow-providers-amazon apache-airflow-providers-snowflake PyPDF2 pandas boto3 python-dotenv
+RUN pip install --no-cache-dir pydantic apache-airflow-providers-amazon apache-airflow-providers-snowflake PyPDF2 pandas boto3 python-dotenv streamlit
 
+# RUN pip install -r  /Users/nidhikulkarni/Final-Project/requirements.txt
+
+
+#RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
 # Continue with any other setup you may need
 EXPOSE 8080
+EXPOSE 8001
+EXPOSE 8501
