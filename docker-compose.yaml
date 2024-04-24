@@ -116,6 +116,44 @@ services:
       start_period: 30s
     restart: always
 
+  streamlit: 
+    image: streamlit_v1:latest
+    # Ensure there is a space after the colon. Specify an image version if needed.
+    # build: Uncomment these lines if you're building from a Dockerfile instead of using an existing image.
+    #   context: .
+    #   dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8501:8501"  # Maps port 8501 on the host to port 8501 in the container.
+    volumes:
+      - ~/Final-Project/bingewatch.py:/app/bingewatch.py
+      - ~/Final-Project/utils.py:/app/utils.py
+      - ~/Final-Project/.env:/app/.env
+      - ~/Final-Project/db_module:/app/db_module
+      - ~/Final-Project/models:/app/models
+      - ~/Final-Project/main.py:/app/main.py
+    command: streamlit run --server.port=8501 --server.address=0.0.0.0 /app/bingewatch.py  
+      
+  fastapi:
+    image: fastapi_v1:latest
+    ports:
+      - "8001:8001"
+    command: uvicorn contentapi:app --host 0.0.0.0 --port 8001 --reload
+    volumes:
+      - ~/Final-Project/contentapi.py:/app/contentapi.py
+      - ~/Final-Project/.env:/app/.env
+
+  mainfastapi:
+    image: fastapi_v1:latest
+    ports:
+      - "8000:8000"
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - ~/Final-Project/main.py:/app/main.py
+      - ~/Final-Project/db_module:/app/db_module
+      - ~/Final-Project/models:/app/models
+      - ~/Final-Project/.env:/app/.env    
+
   airflow-webserver:
     <<: *airflow-common
     command: webserver
@@ -235,8 +273,8 @@ services:
           echo "   https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html#before-you-begin"
           echo
         fi
-        mkdir -p /sources/logs /sources/dags /sources/plugins
-        chown -R "${AIRFLOW_UID}:0" /sources/{logs,dags,plugins}
+        mkdir -p /sources/logs /sources/dags /sources/plugins /sources/src
+        chown -R "${AIRFLOW_UID}:0" /sources/{logs,dags,plugins,src}
         exec /entrypoint airflow version
     # yamllint enable rule:line-length
     environment:
