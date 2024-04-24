@@ -63,7 +63,7 @@ def show_main_page():
         unique_ids = [id.strip() for id in input_ids.split(',')]
         
         # Send a GET request to the FastAPI endpoint with the list of IDs
-        response = requests.get(f'http://localhost:8000/content', params={'unique_ids': unique_ids, 'content_type': content_type})
+        response = requests.get(f'http://fastapi:8001/content', params={'unique_ids': unique_ids, 'content_type': content_type})
         
         if response.status_code == 200:
             movies = response.json()
@@ -157,7 +157,7 @@ def show_search_page():
     
     
     if st.button("Search"):
-        response = requests.get(f"http://localhost:8000/content", params={"name": movie_name ,'content_type': content_type})
+        response = requests.get(f"http://fastapi:8001/content", params={"name": movie_name ,'content_type': content_type})
         if response.status_code == 200:
             movies = response.json()
             if movies:  # Check if the movies list is not empty
