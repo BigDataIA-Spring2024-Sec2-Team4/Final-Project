@@ -8,7 +8,7 @@ client = TestClient(app)
 def test_fetch_movies_by_ids():
     # Mock data that mimics the database output
     mock_movies = [
-        ("Inception", "Christopher Nolan", "Leonardo DiCaprio", 2010, 148, "Netflix", "url_to_trailer", "url_to_thumbnail"),
+        ("Inception", "Christopher Nolan", "Leonardo DiCaprio", 2010, 148, "Netflix", "url_to_trailer", "url_to_thumbnail", "123"),
         # Add more examples as needed
     ]
 
@@ -36,7 +36,7 @@ def test_get_movies():
     # Mock the response from fetch_movies_by_ids
     with patch("contentapi.fetch_movies_by_ids") as mock_fetch:
         mock_fetch.return_value = [
-            ("Inception", "Christopher Nolan", "Leonardo DiCaprio", 2010, 148, "Netflix", "url_to_trailer", "url_to_thumbnail"),
+            ("Inception", "Christopher Nolan", "Leonardo DiCaprio", 2010, 148, "Netflix", "url_to_trailer", "url_to_thumbnail", "123"),
             # Add more examples as needed
         ]
         # Adjust the API call to match the new endpoint and parameters
@@ -51,7 +51,8 @@ def test_get_movies():
                 "duration": 148,
                 "available_on": "Netflix",
                 "trailer": "url_to_trailer",
-                "thumbnail": "url_to_thumbnail"
+                "thumbnail": "url_to_thumbnail",
+                "unique_id": "123"
             }
         ]
 
