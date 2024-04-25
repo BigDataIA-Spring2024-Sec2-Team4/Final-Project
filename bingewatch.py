@@ -8,7 +8,7 @@ from db_module.user_handler import create_user
 import requests
 from audio_recorder_streamlit import audio_recorder
 from streamlit_float import *
-from utils import speech_to_text
+from utils import speech_to_text, query_to_id
 import os
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
@@ -131,7 +131,7 @@ def get_liked_content(username):
 
 def clear_input():
     """ Clear the input field by resetting the session state variable. """
-    st.session_state.input_ids = ''
+    st.session_state.query = ''
 
 def clear_input_name():
     """ Clear the input field by resetting the session state variable. """
@@ -145,11 +145,9 @@ def show_main_page():
 
 # Allow user to enter a comma-separated list of IDs
 
-    if 'input_ids' not in st.session_state:
-        st.session_state.input_ids = ''
-
+    if 'transcript_query' not in st.session_state:
+        st.session_state.transcript_query = ''
     #input_ids = st.text_input('Enter Unique IDs separated by commas:', value=st.session_state.get('input_ids', ''), key="input_ids")
-
     input1, input2 = st.columns([0.8, 0.2])
     with input2:
         audio_bytes = audio_recorder()
@@ -164,22 +162,30 @@ def show_main_page():
             # Convert the audio to text using the speech_to_text function
             transcript = speech_to_text(webm_file_path)
             if transcript:
-                st.session_state.input_ids = transcript.strip()
+                st.session_state.transcript_query = transcript[0].strip()
                 os.remove(webm_file_path)
 
     with input1:
+
+        if st.session_state.transcript_query:
+            # If there is a transcription, update the query and clear the transcription variable
+            query = st.text_input('What do you feel like?', value=st.session_state.transcript_query, key="query")
+            st.session_state.transcript_query = ''
     #    if 'input_ids' not in st.session_state:
-    #        st.session_state.input_ids = ''
+    #        st.session_state.query = ''
+        else:
 
-        input_ids = st.text_input('Enter Unique IDs separated by commas:', value=st.session_state.get('input_ids', ''), key="input_ids")
+            query = st.text_input('What do you feel like?', value=st.session_state.get('query', ''), key="query")
 
+    if query:
 
-    if input_ids:
+        unique_ids = query_to_id(query, content_type)
+        unique_ids_list = unique_ids.split(',')
         # Split the input string into a list of IDs
-        unique_ids = [id.strip() for id in input_ids.split(',')]
+       # unique_ids = [id.strip() for id in input_ids.split(',')]
         
         # Send a GET request to the FastAPI endpoint with the list of IDs
-        response = requests.get(f'http://fastapi:8001/content', params={'unique_ids': unique_ids, 'content_type': content_type})
+        response = requests.get(f'http://fastapi:8001/content', params={'unique_ids': unique_ids_list, 'content_type': content_type})
         
         if response.status_code == 200:
             movies = response.json()
@@ -229,17 +235,16 @@ def show_main_page():
                             #store_feedback(movie['unique_id'], user_id, 'dislike')
                             st.write('💔')
         else:
-            st.error("Result not found!")
+            st.error("Result not found!")   
     else:
-        st.info("Please enter one or more unique IDs separated by commas.")
-
+        return None        
     
 
 def show_search_page():
     st.title("Search and Watch!")
 
     with st.popover("Pick a Type!"):
-        content_type = st.radio("", ["movie", "tv_show"], index=0, on_change=clear_input)
+        content_type = st.radio("", ["movie", "tv_show"], index=0, on_change=clear_input_name)
 
 
     if 'movie_name' not in st.session_state:
@@ -271,7 +276,7 @@ def show_search_page():
 
     with input1:
     #    if 'input_ids' not in st.session_state:
-    #        st.session_state.input_ids = ''
+    #        st.session_state.query = ''
 
         movie_name = st.text_input("Enter movie name to search:", value=st.session_state.get('movie_name', ''), key="movie_name")
     
