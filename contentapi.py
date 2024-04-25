@@ -23,7 +23,7 @@ def fetch_movies_by_ids(content_type: str, unique_ids: Optional[List[str]] = Non
        if unique_ids: # Create a parameterized query string with placeholders for unique_ids
         placeholders = ', '.join(['%s'] * len(unique_ids))
         query = f"""
-            SELECT TITLE, DIRECTOR, CAST_MEMBER, RELEASE_YEAR, DURATION, AVAILABLE_ON, TRAILER, THUMBNAIL
+            SELECT TITLE, DIRECTOR, CAST_MEMBER, RELEASE_YEAR, DURATION, AVAILABLE_ON, TRAILER, THUMBNAIL, UNIQUE_ID
             FROM {table_name}
             WHERE UNIQUE_ID IN ({placeholders})
         """.format(','.join(['%s' for _ in unique_ids]))  # Safe parameterization
@@ -32,7 +32,7 @@ def fetch_movies_by_ids(content_type: str, unique_ids: Optional[List[str]] = Non
         cursor.execute(query, unique_ids)
        elif name:
             query = f"""
-                SELECT TITLE, DIRECTOR, CAST_MEMBER, RELEASE_YEAR, DURATION, AVAILABLE_ON, TRAILER, THUMBNAIL
+                SELECT TITLE, DIRECTOR, CAST_MEMBER, RELEASE_YEAR, DURATION, AVAILABLE_ON, TRAILER, THUMBNAIL, UNIQUE_ID
                 FROM {table_name}
                 WHERE LOWER(TITLE) LIKE LOWER(%s)
             """
@@ -62,7 +62,8 @@ async def get_movies(content_type: str, unique_ids: Optional[List[str]] = Query(
                 "duration": movie_data[4],
                 "available_on": movie_data[5],
                 "trailer": movie_data[6] if movie_data[6] else "No trailer available" ,
-                "thumbnail": movie_data[7] if movie_data[7] else "No thumbnail available"
+                "thumbnail": movie_data[7] if movie_data[7] else "No thumbnail available",
+                "unique_id": movie_data[8]
             })
         return movies
     else:

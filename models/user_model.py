@@ -3,6 +3,8 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declarative_base
 import datetime
 import uuid
+from sqlalchemy import ForeignKey, Integer, Table
+
 
 Base = declarative_base()
 
@@ -56,3 +58,11 @@ class EmailTracker(Base):
     verification_token = Column(String, primary_key=True)
     email = Column(String)
     expire_time = Column(DateTime)
+
+class Like(Base):
+    __tablename__ = 'likes'
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    username = Column(String, ForeignKey('users.username'))
+    content_id = Column(String)
+    content_type = Column(String)  # 'movie' or 'tv_show'
+   
