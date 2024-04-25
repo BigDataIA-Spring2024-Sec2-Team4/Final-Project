@@ -1,5 +1,5 @@
 import streamlit as st
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine, select, ForeignKey, DateTime
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String
@@ -10,6 +10,9 @@ from audio_recorder_streamlit import audio_recorder
 from streamlit_float import *
 from utils import speech_to_text
 import os
+import uuid
+from sqlalchemy.dialects.postgresql import UUID
+import datetime
 
 float_init()
 
@@ -19,6 +22,13 @@ class User(Base):
     __tablename__ = 'users'
     username = Column(String, primary_key=True)
     password = Column(String)
+
+class Like(Base):
+    __tablename__ = 'likes'
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    username = Column(String, ForeignKey('users.username'))
+    content_id = Column(String)
+    content_type= Column(String)
 
 # Database connection
 DATABASE_URL = "postgresql://airflow:airflow@postgres/airflow"
@@ -48,6 +58,8 @@ def verify_user(username, entered_password):
 def LoggedIn_Clicked(username, password):
     if verify_user(username, password):
         st.session_state['loggedIn'] = True
+        st.session_state['username'] = username
+        st.session_state['username'] = username
     else:
         st.error("Invalid username or password")
 
@@ -80,6 +92,42 @@ def show_create_user_page():
                 st.experimental_rerun()
             else:
                 st.error(f"Failed to create user: {result['description']}")
+
+
+def store_like(username, content_id, content_type):
+    with SessionLocal() as session:
+        existing_like = session.query(Like).filter_by(username=username, content_id=content_id, content_type=content_type).first()
+        if not existing_like:
+            like = Like(username=username, content_id=content_id, content_type=content_type)
+            session.add(like)
+            session.commit()
+            return "Liked successfully"
+        else:
+            return "Already liked"
+        
+def get_liked_content(username):
+    with SessionLocal() as session:
+        likes= session.query(Like).filter(Like.username == username).all()
+    if not likes:
+        return []
+    content_ids_by_type = {'movie': [], 'tv_show': []}
+    for like in likes:
+        content_ids_by_type[like.content_type].append(like.content_id)
+
+    liked_content_details = []
+    for content_type, ids in content_ids_by_type.items():
+        if ids:
+            # Fetch content details using FastAPI
+            response = requests.get(f'http://fastapi:8001/content', params={'unique_ids': ids, 'content_type': content_type})
+            if response.status_code == 200:
+                content_details = response.json()
+                liked_content_details.extend(content_details)
+            else:
+                print(f"Failed to fetch {content_type} details: {response.text}")
+    
+    return liked_content_details
+
+
 
 def clear_input():
     """ Clear the input field by resetting the session state variable. """
@@ -168,14 +216,18 @@ def show_main_page():
                     #st.video(movie['trailer'], format='video/mp4', start_time=0)
 
                     btn_col1, btn_col2 = st.columns(2)
+                    st.markdown("---")
                     with btn_col1:
                         if st.button(f"👍",key=f"like_{movie.get('unique_id', index)}"):
-                        # store_feedback(movie['unique_id'], user_id, 'like')
-                            st.write('You liked this movie!')
+                            response=store_like(st.session_state['username'], movie.get('unique_id'), content_type)
+                            if response == "Liked successfully":
+                                st.write('❤️')
+                            elif response == "Already liked":
+                                st.warning("You have already liked this movie.")
                     with btn_col2:
                         if st.button(f"👎",key=f"dislike_{movie.get('unique_id', index)}"):
                             #store_feedback(movie['unique_id'], user_id, 'dislike')
-                            st.write('You disliked this movie!')
+                            st.write('💔')
         else:
             st.error("Result not found!")
     else:
@@ -255,15 +307,43 @@ def show_search_page():
                         trailer = movie.get('trailer', "No trailer available")
                         if trailer != "No trailer available":
                             st.video(trailer, format='video/mp4', start_time=0)
+                            st.markdown("---")
                         else:
                             st.error("Trailer not available")
+                            st.markdown("---")
             else:
                 st.error("No movies found matching the criteria.")
         else:
             st.error("Failed to fetch movies.")
     
-def page_three():
-    st.write("Welcome to Page Three!")
+def show_history_page():
+    st.title("Your content!")
+    username = st.session_state['username']  # Make sure this is set when the user logs in
+    liked_contents = get_liked_content(username)
+    
+    if not liked_contents:
+        st.write("You haven't liked any content yet.")
+    else:
+        columns_per_row = 4
+        row = None
+                
+        for index, content in enumerate(liked_contents):
+            if index % columns_per_row == 0:
+                row = st.columns(columns_per_row)  # Create a new row every 'columns_per_row' movies
+            
+            col = row[index % columns_per_row]  # Determine the current position in the row
+            
+            with col:
+                st.subheader(f"{content['title']}")
+                st.image(content['thumbnail'], use_column_width=True)
+                st.write(f"Director: {content['director']}")
+                st.write(f"Cast: {content['cast_member']}")
+                st.write(f"Release Year: {content['release_year']}")
+                st.write(f"Duration: {content['duration']}")
+                st.write(f"Available on: {content['available_on']}")
+                if content['trailer'] != "No trailer available":
+                    st.video(content['trailer'], format='video/mp4')
+                st.markdown("---")
 
 def main():
     if not st.session_state['loggedIn']:
@@ -275,7 +355,7 @@ def main():
         pages = {
             "Main Page": show_main_page,
             "Search Page": show_search_page,
-            "History Page": page_three
+            "History Page": show_history_page
             # Add more pages as needed
         }
         st.sidebar.title("Navigation")
