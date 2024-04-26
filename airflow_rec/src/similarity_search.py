@@ -5,14 +5,13 @@
 
 import pandas as pd
 
-"""# **Movie Suggestion**"""
+#Movie Suggestion
 
 # Load the CSV into a DataFrame
 df = pd.read_csv('/content/final_movies.csv')
 
 df = df[['sentences','unique_id']]
 
-# Commented out IPython magic to ensure Python compatibility.
 ! pip install langchainhub
 # %pip install --upgrade --quiet  langchain-pinecone langchain-openai langchain
 
@@ -30,8 +29,8 @@ pc = Pinecone(
     api_key='a2ca514b-4690-421b-9191-bf3d49719490'
 )
 
-os.environ['PINECONE_API_KEY'] = 'a2ca514b-4690-421b-9191-bf3d49719490'
-os.environ["OPENAI_API_KEY"] = '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'
+os.environ['PINECONE_API_KEY'] = 'PINECONE_API_KEY'
+os.environ["OPENAI_API_KEY"] = 'OPENAI_API_KEY'
 if index_name not in pc.list_indexes().names():
     pc.create_index(
         name=index_name,
