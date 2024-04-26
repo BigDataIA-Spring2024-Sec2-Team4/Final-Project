@@ -11,8 +11,7 @@ With a focus on genre and mood-based filtering, as well as occasion-specific rec
 
 Experience the power of personalized content discovery:
 
-[![Streamlit Interface](https://img.shields.io/badge/Streamlit_Interface-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](http://34.16.229.123:8501/)
-[![FastAPI Endpoints](https://img.shields.io/badge/FastAPI_Endpoints-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Application](https://img.shields.io/badge/Application-008000?t&logoColor=white)](http://34.16.229.123:8501/)
 [![Codelabs Tutorial](https://img.shields.io/badge/Codelabs_Tutorial-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://codelabs-preview.appspot.com/?file_id=1z-pGIA6HOZregKgnnslvBE-ZZRUS_rhmiQvnVc8Xoww#0)
 [![Demo Video](https://img.shields.io/badge/Demo_Video-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/link-to-your-demo-video)
 
@@ -121,14 +120,26 @@ To embark on your BingeWatch journey:
 
 1. Clone the repo.
 2. Install the dependencies.
-3. Set up environment variables.
-4. Start Airflow for data synchronization.
-5. Launch the Streamlit UI and FastAPI backend.
+```
+pip install -r requirements.txt
+```
+3. Run the Dockerfile to generate the image and run the Docker compose file to bring up the instances.
+```
+docker build -t <image_name> .
+```
+```
+docker compose up -d
+```
+This is create an airflow instance, postgresDB, streamlit for frontend and fastapi for backend.
 
-## 📚 References
+## 📚 References & Dataset
+
+Dataset: https://www.kaggle.com/datasets/shivamb/netflix-shows/data
 
 For detailed insights into our approach and methodology, visit:
-
+RAG - https://www.pinecone.io/learn/retrieval-augmented-generation/
+Speech Input - https://blog.futuresmart.ai/building-a-conversational-voice-chatbot-integrating-openais-speech-to-text-text-to-speech
+Recommendation systems - https://medium.com/dailymotion/reinvent-your-recommender-system-using-vector-database-and-opinion-mining-a4fadf97d020
 
 ## ✅ Learning Outcomes
 
@@ -144,9 +155,9 @@ The development of BingeWatch has enriched our team with knowledge in:
 
 | Name     | Contribution % | Key Contributions                        |
 |----------|----------------|------------------------------------------|
-| Member 1 | 0%             | Data engineering and backend API         |
-| Member 2 | 0%             | Frontend development and UI/UX design    |
-| Member 3 | 0%             | Machine learning and data analytics      |
+| Nidhi Kulkarni | 50%             | Airflow, Frontend, Backend, Data processing, Cloud Deployment           |
+| Riya Singh | 50%             | RAG, Vector Database, LangChain, RDBMS    |
+
 
 
 
