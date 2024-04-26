@@ -39,7 +39,11 @@ Our mission is to:
 - Increase user engagement and reduce decision-making time.
 - Provide cross-platform insights for content strategies.
 
-##  Architecture 
+## 🏛️ Architecture 
+
+Below is the architectural diagram showcasing the data flow and interaction between different components of BingeWatch:
+
+![Architecture Diagram](https://github.com/BigDataIA-Spring2024-Sec2-Team4/Final-Project/assets/144851281/968f52ed-12c5-4e44-be70-6cdefc6f4721)
 
 ## 🔧 Technologies Used
 
@@ -76,5 +80,76 @@ To get started with our system, you will need:
 
 Organized and structured for scalability and ease of navigation:
 
-```plaintext
+``` 
+.github
+   |-- workflows
+   |   |-- ci.yml
+.gitignore
+Dockerfile
+README.md
+airflow_rec
+   |-- dags
+   |   |-- __init__.py
+   |   |-- data_extraction.py
+   |-- src
+   |   |-- __init__.py
+   |   |-- data_cleaning.py
+   |   |-- rag_implementation.py
+   |   |-- similarity_search.py
+   |   |-- snowflake_upload.py
+   |   |-- trailer_extract.py
+bingewatch.py
+contentapi.py
+db_module
+   |-- __init__.py
+   |-- db.py
+   |-- user_handler.py
+docker-compose.yaml
+main.py
+models
+   |-- __init__.py
+   |-- pydantic_validators.py
+   |-- user_model.py
+requirements.txt
+unit_testing.py
+utils.py
+```
+
+## 🖥 How to Run Application Locally
+
+To embark on your BingeWatch journey:
+
+1. Clone the repo.
+2. Install the dependencies.
+3. Set up environment variables.
+4. Start Airflow for data synchronization.
+5. Launch the Streamlit UI and FastAPI backend.
+
+## 📚 References
+
+For detailed insights into our approach and methodology, visit:
+
+
+## ✅ Learning Outcomes
+
+The development of BingeWatch has enriched our team with knowledge in:
+
+- Advanced machine learning model integration.
+- Full-stack development and cloud-native application deployment.
+- Creating a data-driven user interface with Streamlit.
+
+## 👥 Team Information and Contribution
+
+**We affirm our commitment to academic integrity and original work.**
+
+| Name     | Contribution % | Key Contributions                        |
+|----------|----------------|------------------------------------------|
+| Member 1 | 0%             | Data engineering and backend API         |
+| Member 2 | 0%             | Frontend development and UI/UX design    |
+| Member 3 | 0%             | Machine learning and data analytics      |
+
+
+
+
+
 
