@@ -13,7 +13,7 @@ Experience the power of personalized content discovery:
 
 [![Application](https://img.shields.io/badge/Application-008000?style=for-the-badge&&logoColor=white)](http://34.16.229.123:8501/)
 [![Codelabs Tutorial](https://img.shields.io/badge/Codelabs_Tutorial-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://codelabs-preview.appspot.com/?file_id=1z-pGIA6HOZregKgnnslvBE-ZZRUS_rhmiQvnVc8Xoww#0)
-[![Demo Video](https://img.shields.io/badge/Demo_Video-FF0000?style=for-the-badge&logo=youtube&logoColor=white)]([https://youtu.be/CCX3OuMF1FU])
+[![Demo Video](https://img.shields.io/badge/Demo_Video-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/CCX3OuMF1FU)
 
 
 ## 📜 Problem Statement
