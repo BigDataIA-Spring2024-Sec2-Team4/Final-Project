@@ -155,8 +155,10 @@ WE ATTEST THAT WE HAVEN’T USED ANY OTHER STUDENTS’ WORK IN OUR ASSIGNMENT AN
 
 | Name     | Contribution % | Key Contributions                        |
 |----------|----------------|------------------------------------------|
-| Nidhi Kulkarni | 50%             | Airflow, Frontend, Backend, Data processing, Cloud Deployment           |
-| Riya Singh | 50%             | RAG Implementation, Vector Database, LangChain, Airflow    |
+| Nidhi Kulkarni | 35%             | Airflow, Frontend, Backend, Data processing, Cloud Deployment           |
+| Riya Singh | 35%             | RAG Implementation, Vector Database, LangChain, Airflow    |
+| Deepakraja Rajendran | 25%             | Data Source, EDA, Legacy Implementation, README, Documentation    |
+
 
 
 
