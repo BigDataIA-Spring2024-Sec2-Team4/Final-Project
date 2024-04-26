@@ -11,9 +11,11 @@ With a focus on genre and mood-based filtering, as well as occasion-specific rec
 
 Experience the power of personalized content discovery:
 
-- [Streamlit Interface](https://streamlit.io) - A user-friendly web app for easy interaction.
-- [FastAPI Endpoints](https://fastapi.tiangolo.com) - The RESTful backend powering our platform.
-- [Codelabs Tutorial](https://codelabs.developers.google.com) - A step-by-step guide on our system.
+[![Streamlit Interface](https://img.shields.io/badge/Streamlit_Interface-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](http://34.16.229.123:8501/)
+[![FastAPI Endpoints](https://img.shields.io/badge/FastAPI_Endpoints-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Codelabs Tutorial](https://img.shields.io/badge/Codelabs_Tutorial-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://codelabs-preview.appspot.com/?file_id=1z-pGIA6HOZregKgnnslvBE-ZZRUS_rhmiQvnVc8Xoww#0)
+[![Demo Video](https://img.shields.io/badge/Demo_Video-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/link-to-your-demo-video)
+
 
 ## 📜 Problem Statement
 
@@ -36,6 +38,8 @@ Our mission is to:
 - Enhance the user experience through genre, mood, and occasion-based recommendations.
 - Increase user engagement and reduce decision-making time.
 - Provide cross-platform insights for content strategies.
+
+##  Architecture 
 
 ## 🔧 Technologies Used
 
