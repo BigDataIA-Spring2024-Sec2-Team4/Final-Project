@@ -26,7 +26,7 @@ index_name='bot'
 
 
 pc = Pinecone(
-    api_key='a2ca514b-4690-421b-9191-bf3d49719490'
+    api_key='PINECONE_API_KEY'
 )
 
 os.environ['PINECONE_API_KEY'] = 'PINECONE_API_KEY'
@@ -50,7 +50,7 @@ vectorstore =  pic.from_documents( data, embeddings, index_name=index_name, name
 
 import pandas as pd
 
-"""#Similarly for TV Shows"""
+#Similarly for TV Shows
 
 df = pd.read_csv('/content/final_tv_shows.csv')
 df = df[['sentences','unique_id']]
@@ -63,7 +63,7 @@ vectorstore =  pic.from_documents( data, embeddings, index_name=index_name, name
 
 query = "Can you suggest a action movie or show?"
 
-"""#Similarity Search"""
+#Similarity Search
 
 from langchain_pinecone import PineconeVectorStore
 
