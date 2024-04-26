@@ -137,9 +137,9 @@ This is create an airflow instance, postgresDB, streamlit for frontend and fasta
 Dataset: https://www.kaggle.com/datasets/shivamb/netflix-shows/data
 
 For detailed insights into our approach and methodology, visit:
-RAG - https://www.pinecone.io/learn/retrieval-augmented-generation/
-Speech Input - https://blog.futuresmart.ai/building-a-conversational-voice-chatbot-integrating-openais-speech-to-text-text-to-speech
-Recommendation systems - https://medium.com/dailymotion/reinvent-your-recommender-system-using-vector-database-and-opinion-mining-a4fadf97d020
+- RAG - https://www.pinecone.io/learn/retrieval-augmented-generation/
+- Speech Input - https://blog.futuresmart.ai/building-a-conversational-voice-chatbot-integrating-openais-speech-to-text-text-to-speech
+- Recommendation systems - https://medium.com/dailymotion/reinvent-your-recommender-system-using-vector-database-and-opinion-mining-a4fadf97d020
 
 ## ✅ Learning Outcomes
 
@@ -156,7 +156,7 @@ The development of BingeWatch has enriched our team with knowledge in:
 | Name     | Contribution % | Key Contributions                        |
 |----------|----------------|------------------------------------------|
 | Nidhi Kulkarni | 50%             | Airflow, Frontend, Backend, Data processing, Cloud Deployment           |
-| Riya Singh | 50%             | RAG, Vector Database, LangChain, RDBMS    |
+| Riya Singh | 50%             | RAG, Vector Database, LangChain, Airflow    |
 
 
 
