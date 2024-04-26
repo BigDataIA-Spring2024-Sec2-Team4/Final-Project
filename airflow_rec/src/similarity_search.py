@@ -1,8 +1,3 @@
-! pip install -q pandas
-! pip install -q sentence-transformers
-! pip install pinecone-client
-! pip install -qU langchain-openai
-
 import pandas as pd
 
 #Movie Suggestion
@@ -12,8 +7,6 @@ df = pd.read_csv('/content/final_movies.csv')
 
 df = df[['sentences','unique_id']]
 
-! pip install langchainhub
-# %pip install --upgrade --quiet  langchain-pinecone langchain-openai langchain
 
 from langchain.vectorstores import Pinecone as pic
 from langchain_community.document_loaders import DataFrameLoader
