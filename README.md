@@ -157,7 +157,6 @@ WE ATTEST THAT WE HAVEN’T USED ANY OTHER STUDENTS’ WORK IN OUR ASSIGNMENT AN
 |----------|----------------|------------------------------------------|
 | Nidhi Kulkarni | 33.33%             | Airflow, Frontend, Backend, Data processing, Cloud Deployment           |
 | Riya Singh | 33.33%             | RAG Implementation, Vector Database, LangChain, Airflow    |
-| Deepakraja Rajendran | 33.33%             | Data Source, EDA, Legacy Implementation, README, Documentation    |
 
 
 
